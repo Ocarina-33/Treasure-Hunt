@@ -3,7 +3,6 @@ const door = document.getElementById("door");
 const question = document.getElementById("question");
 const questionContainer = document.getElementById("question-container");
 
-
 let scale = 1.2;
 let questionIndex = 0;
 
@@ -28,29 +27,39 @@ const questions = [
 ];
 
 yesBtn.addEventListener("click", () => {
-
   questionIndex = (questionIndex + 1) % questions.length;
   question.textContent = questions[questionIndex];
+
   scale *= 1.2;
   yesBtn.style.transform = `scale(${scale})`;
-  const btnWidth = yesBtn.offsetWidth * scale;
-  const btnHeight = yesBtn.offsetHeight * scale;
-  const questionRect = question.getBoundingClientRect();
-  const safeTop = questionRect.bottom + 20;
-  const maxX = window.innerWidth - btnWidth;
-  const maxY = window.innerHeight - btnHeight;
-  let randX = Math.random() * maxX;
-  let randY = Math.random() * (maxY - safeTop) + safeTop;
-  yesBtn.style.left = `${randX}px`;
-  yesBtn.style.top = `${randY}px`;
 
-  if (scale >= 19) {
-    yesBtn.style.display = "none";
-    door.style.display = "block";
-  }
+  // Delay position update until the transform is applied
+  requestAnimationFrame(() => {
+    const btnRect = yesBtn.getBoundingClientRect();
+    const questionRect = question.getBoundingClientRect();
+    const safeTop = questionRect.bottom + 20;
+
+    const maxX = window.innerWidth - btnRect.width;
+    const maxY = window.innerHeight - btnRect.height;
+
+    let randX = Math.random() * maxX;
+    let randY = Math.random() * (maxY - safeTop) + safeTop;
+
+    // Clamp the positions to ensure visibility
+    randX = Math.max(0, Math.min(randX, maxX));
+    randY = Math.max(safeTop, Math.min(randY, maxY));
+
+    yesBtn.style.position = "absolute";
+    yesBtn.style.left = `${randX}px`;
+    yesBtn.style.top = `${randY}px`;
+
+    if (scale >= 19) {
+      yesBtn.style.display = "none";
+      door.style.display = "block";
+    }
+  });
 });
 
 door.addEventListener("click", () => {
   window.location.href = "answer.html";
 });
-
