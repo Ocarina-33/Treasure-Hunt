@@ -1,7 +1,7 @@
 const yesBtn = document.getElementById("yes-btn");
-const door = document.getElementById("door");
 const question = document.getElementById("question");
 const questionContainer = document.getElementById("question-container");
+const doorGrid = document.getElementById("door-grid");
 
 let scale = 1.2;
 let questionIndex = 0;
@@ -33,7 +33,6 @@ yesBtn.addEventListener("click", () => {
   scale *= 1.2;
   yesBtn.style.transform = `scale(${scale})`;
 
-  // Delay position update until the transform is applied
   requestAnimationFrame(() => {
     const btnRect = yesBtn.getBoundingClientRect();
     const questionRect = question.getBoundingClientRect();
@@ -45,7 +44,6 @@ yesBtn.addEventListener("click", () => {
     let randX = Math.random() * maxX;
     let randY = Math.random() * (maxY - safeTop) + safeTop;
 
-    // Clamp the positions to ensure visibility
     randX = Math.max(0, Math.min(randX, maxX));
     randY = Math.max(safeTop, Math.min(randY, maxY));
 
@@ -53,13 +51,35 @@ yesBtn.addEventListener("click", () => {
     yesBtn.style.left = `${randX}px`;
     yesBtn.style.top = `${randY}px`;
 
-    if (scale >= 19) {
+    if (scale >= 20) {
       yesBtn.style.display = "none";
-      door.style.display = "block";
+      revealDoors();
     }
   });
 });
 
-door.addEventListener("click", () => {
-  window.location.href = "answer.html";
-});
+function revealDoors() {
+  questionContainer.style.display = "none";
+  document.body.style.overflow = "auto"; // Enable scrolling if needed
+  doorGrid.style.display = "grid";
+  doorGrid.innerHTML = ""; // Clear any existing doors
+
+  // Create 15 doors in the grid
+  for (let i = 0; i < 9; i++) {
+    const door = document.createElement("div");
+    door.classList.add("door");
+
+    // Add a click event listener to each door
+    door.addEventListener("click", () => {
+      if (i === 6) {  // 12th door (index 11) is the correct answer
+        window.location.href = "answer.html";  // Redirect to answer page
+      } else {
+        alert("Wrong door. Try another one!");
+      }
+    });
+
+    // Append each door to the grid
+    doorGrid.appendChild(door);
+  }
+}
+
