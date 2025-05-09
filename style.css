@@ -11,7 +11,9 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  overflow: hidden;
+  /*overflow: hidden;*
+  overflow-x: hidden; /* only hide horizontal scroll if needed */
+  overflow-y: auto; 
 }
 
 #question-container {
@@ -68,15 +70,6 @@ body {
   border: 2px solid #bd5d09;
 }
 
-/* Style for the door image */
-#door {
-  width: 250px;
-  cursor: pointer;
-  display: block;
-  margin: 100px auto 0;
-  z-index: 3;
-}
-
 /* Style for the Pikachu GIF */
 #pikachu-gif {
   width: 200px;
@@ -84,3 +77,26 @@ body {
   margin-top: 50px;
   z-index: 5;
 }
+
+#door-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 120px); /* 5 columns, each 80px wide */
+  grid-template-rows: repeat(3, 120px);    /* 3 rows, each 120px high */
+  gap: 15px;
+  justify-content: center;
+  margin-top: 50px;
+  z-index: 3;
+  margin-bottom: 50px;
+}
+
+.door {
+  width: 120px;  /* Door width */
+  height: 120px;  /* Door height */
+  background-image: url('door.png');
+  background-size: cover;
+  cursor: pointer;
+  transition: transform 0.2s;
+  z-index: 5; /* Ensure doors are clickable */
+}
+
+
